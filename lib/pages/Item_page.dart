@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../components/custom_navigation_bar1.dart';
 import '../components/itemtiles.dart';
-import '../model/categoary_model.dart';
+import '../model/category_model.dart';
 import '../model/item_model.dart';
 import 'cart_page.dart';
 import 'chat_page.dart';
@@ -34,7 +34,7 @@ class _ItemPageState extends State<ItemPage> {
   @override
   void initState() {
     var itemModel= Provider.of<ItemModel>(context,listen: false);
-     _loadAllPrefs = itemModel.loadItems();
+     //_loadAllPrefs = itemModel.loadItems();
     super.initState();
   }
   @override
@@ -47,7 +47,7 @@ class _ItemPageState extends State<ItemPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
@@ -58,7 +58,7 @@ class _ItemPageState extends State<ItemPage> {
                 ),
                 child: TextField(
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 20.0),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 20.0),
                     hintText: 'Search',
                     prefixIcon: const Icon(
                       Icons.search,
@@ -82,19 +82,18 @@ class _ItemPageState extends State<ItemPage> {
           builder: (context, value, child) {
             return GridView.builder(
               itemCount: value.items.length,
-              padding: EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20.0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 138/198,
+                childAspectRatio: 3/5,
               ),
               itemBuilder: (context, index) {
 
-                var x = value.items[index][0];
-                print(x['image']);
+                var item = value.items[index];
                 return ItemTiles(
-                  image: value.items[index][index]['image'],
-                  title: value.items[index][index]['title'],
-                  price: value.items[index][index]['price'],
+                  image: item.image,
+                  title: item.title,
+                  price: item.price.toString(),
                   // onCategorySelected: (String ) {  },
                 );
               },

@@ -41,7 +41,7 @@ class _cartPageState extends State<cartPage> {
       body:  Column(
           children: [
             Padding(
-              padding:EdgeInsets.only(left:25.0,right:20.0,top:93.0),
+              padding:EdgeInsets.only(left:25.0,right:20.0,top:53.0),
               child: Text('My Cart',style: TextStyle(fontSize: 30.0,fontWeight: FontWeight.bold,color:topic)),
             ),
             Expanded(
@@ -100,7 +100,7 @@ class _cartPageState extends State<cartPage> {
                       Row(
                         children: [
                           Text(
-                            'Rs ',
+                            '\$',
                             style: TextStyle(
                               fontSize: 16.0,
                               
@@ -136,7 +136,7 @@ class _cartPageState extends State<cartPage> {
                       Row(
                         children: [
                           Text(
-                              'Rs ',
+                              '\$',
                               style: TextStyle(
                                 fontSize: 16.0,
                                
@@ -173,7 +173,7 @@ class _cartPageState extends State<cartPage> {
                       Row(
                         children: [
                           Text(
-                            'Rs ',
+                            '\$',
                             style: TextStyle(
                               fontSize: 16.0,
                             ),
@@ -212,10 +212,11 @@ class _cartPageState extends State<cartPage> {
                     ),
                     padding: const EdgeInsets.only(left: 25.0),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           "Address",
-                          textAlign: TextAlign.left,
+                          //textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 17.0,
                             fontFamily: 'Roboto',
@@ -223,7 +224,7 @@ class _cartPageState extends State<cartPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      SizedBox(width:120.0), // Add a space of 5.0 between the text and the icon
+                      const SizedBox(width:120.0), // Add a space of 5.0 between the text and the icon
                       Icon(
                         Icons.arrow_forward_ios_rounded,
                         color: HexColor("#FFFFFF"),

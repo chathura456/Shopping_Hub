@@ -124,7 +124,7 @@ void _getLocation() async {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 5, right: 240.0, top: 74.0),
+              padding: EdgeInsets.only(left: 5, right: 240.0, top: 24.0),
               child: Text(
                 'Delivery',
                 style: TextStyle(fontSize: 17.0,),

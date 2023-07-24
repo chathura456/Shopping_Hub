@@ -66,11 +66,13 @@ class _SignupPageState extends State<SignupPage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 10.0,),
+              Image.asset('lib/images/Signup.png',width: 350.0),
               Padding(
-                padding: const EdgeInsets.only(top:80.0),
+                padding: const EdgeInsets.only(top:0.0),
                 child: Text('Sign Up',style: TextStyle(fontSize: 40.0,fontWeight: FontWeight.bold,color:TextColor)),
               ),
-              SizedBox(height: 47.0,),
+              const SizedBox(height: 15.0,),
               Center(
                 child: Column(
                   children: [
@@ -274,16 +276,12 @@ class _SignupPageState extends State<SignupPage> {
                         
                       ),
                     ),
-
-
-
-                    SizedBox(height: 20.0,),
+                    const SizedBox(height: 20.0,),
                     GestureDetector(
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
                           _submitForm();
-                          
                         }
                       },
                       child: Container(
@@ -301,9 +299,9 @@ class _SignupPageState extends State<SignupPage> {
                         ),  
                       ),
                     ),
-                    SizedBox(height: 20.0,),
-                    Text("Have an account?",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500,)),
-                    SizedBox(height: 20.0,),
+                    const SizedBox(height: 20.0,),
+                    const Text("Have an account?",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500,)),
+                    const SizedBox(height: 20.0,),
                     GestureDetector(
                       onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(
                         builder: (context){
@@ -327,7 +325,7 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                       ),
                     ),
-                   Image.asset('lib/images/Signup.png',width: 350.0, height: 250.0,),  
+
                   ],
                 ),
               ), 

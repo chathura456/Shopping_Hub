@@ -4,91 +4,42 @@ import 'package:flutter/services.dart';
 
 class ItemModel extends ChangeNotifier {
 
- List _items = [];
+ List<Item> _items = [];
 
-  get items => _items;
+ List<Item> get items => _items;
 
- String _currentCategory = "Vegetables";
-
- get currentCategory =>_currentCategory;
-
- void setCurrentCategory (String category){
-  _currentCategory  = category;
-  loadItems();
-  notifyListeners();
-  print('After Notify : $_currentCategory');
- }
-
- ItemModel() {
-  //loadItems();
- }
-
- Future<void> loadItems() async {
-
-  late String jsonString;
-  if(currentCategory=="Vegetables")
-  {
-   jsonString = await rootBundle.loadString('lib/json/veg.json');
-  }else if(currentCategory=="Fruits"){
-   jsonString = await rootBundle.loadString('lib/json/fruit.json');
-  }else if(currentCategory=="Meat"){
-   jsonString = await rootBundle.loadString('lib/json/meat.json');
-  }else if(currentCategory=="Seafood"){
-   jsonString = await rootBundle.loadString('lib/json/sea.json');
-  }else {
-   print('not category passed');
-  }
-
-  //final jsonString = await rootBundle.loadString('lib/json/veg.json');
-  final jsonItems = json.decode(jsonString);
-
-  _items = List.from(jsonItems.map((item) => List<dynamic>.from(jsonItems)));
-
-
-
+ void setItems(List<Item> items) {
+  _items = items;
   notifyListeners();
  }
 
-  
+ }
+
+class Item {
+ final int id;
+ final String title;
+ final double price;
+ final String brand;
+ final String category;
+ final String image;
+
+ Item({
+  required this.id,
+  required this.title,
+  required this.price,
+  required this.brand,
+  required this.category,
+  required this.image,
+ });
+
+ factory Item.fromJson(Map<String, dynamic> json) {
+  return Item(
+   id: json['id'],
+   title: json['title'],
+   price: json['price'].toDouble(),
+   brand: json['brand'],
+   category: json['category'],
+   image: json['images'][0],
+  );
+ }
 }
-
-
-
-// class ItemModel extends ChangeNotifier {
-//   List<Item> _items = [];
-
-//   List<Item> get items => _items;
-
-//   Future<void> loadItems() async {
-//     final jsonString = await rootBundle.loadString('lib/json/items.json');
-//     final jsonItems = json.decode(jsonString);
-
-//     _items = List<Item>.from(jsonItems.map((item) => Item.fromJson(item)));
-
-//     print(_items);
-
-//     notifyListeners();
-//   }
-// }
-
-// class Item {
-//   final String image;
-//   final String title;
-//   final String price;
-
-//   Item({
-//     required this.image,
-//     required this.title,
-//     required this.price,
-//   });
-
-//   factory Item.fromJson(Map<String, dynamic> json) {
-//     return Item(
-//       image: json['image'],
-//       title: json['title'],
-//       price: json['price'],
-//     );
-//   }
-// }
-
-

@@ -42,10 +42,12 @@ class _ItemTilesState extends State<ItemTiles> {
       isFavorite = !isFavorite;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     var cartModel = Provider.of<CartModel>(context, listen: false);
     var favouriteModel = Provider.of<FavouriteModel>(context, listen: false);
+    double priceDouble = double.parse(widget.price);
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
@@ -64,7 +66,7 @@ class _ItemTilesState extends State<ItemTiles> {
               crossAxisAlignment: CrossAxisAlignment.center, 
            
               children: [
-                Image.asset(
+                Image.network(
                   widget.image,
                   width: 75.0,
                   height: 57.0,
@@ -72,20 +74,21 @@ class _ItemTilesState extends State<ItemTiles> {
                 Text(
                  widget.title ,
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: HexColor("#000000"),
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 Text(
-                  '100g-Rs.${widget.price}',
+                  '\$${priceDouble.toStringAsFixed(2)}',
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: HexColor("#000000"),
                   ),
                 ),
-              SizedBox(height: 5.0,),
+              const SizedBox(height: 5.0,),
                 Container(
                   height: 30.0,
                   width: 110.0,
@@ -157,11 +160,11 @@ class _ItemTilesState extends State<ItemTiles> {
             ),
             Positioned(
               top: -15.0,
-              left: -14.0,
+              right: -14.0,
               child: IconButton(
                 icon: Icon(
                   isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: isFavorite ? const Color(0xFF710005) :  const Color(0xFF710005),
+                  color: isFavorite ? Colors.black :  Colors.black,
                 ),
                 onPressed: (){
                   toggleFavorite();

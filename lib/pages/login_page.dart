@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 
+import '../api/api_connection.dart';
+import '../model/category_model.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -44,9 +47,14 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(builder: (context) => HomePage()),
       );
     }
-    
+
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   
 
   @override
@@ -67,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                   left: 10.0,
                   right: 20.0,
                   top: 80.0,
-                  bottom: 100.0,
+                  bottom:20.0,
                 ),
                 child: Image.asset(
                   'lib/images/Login.png',
@@ -89,13 +97,6 @@ class _LoginPageState extends State<LoginPage> {
               Center(
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
-                      child: Text(
-                        _errorMessage,
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
                     Container(
                       width: 280.0,
                       height: 45.0,
@@ -124,7 +125,6 @@ class _LoginPageState extends State<LoginPage> {
                         onSaved: (value) => _email = value!,
                       ),
                     ),
-                    
                     SizedBox(height: 20.0),
                     Container(
                       width: 280.0,
@@ -157,15 +157,11 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 20.0),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomePage(),
-                          ),
-                        );
+                      onTap: () async {
+
                         if (_formKey.currentState!.validate()) {
-                        //  _formKey.currentState!.save();
+                          /**********If backend run correctly you can uncomment this**********/
+                        //_formKey.currentState!.save();
                           //_submitForm();
 
                           // Navigator.pushReplacement(
@@ -174,6 +170,14 @@ class _LoginPageState extends State<LoginPage> {
                           //     builder: (context) => const HomePage(),
                           //   ),
                           // );
+
+                          /**********If backend run correctly you can comment this**********/
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomePage(),
+                            ),
+                          );
                         }
                       },
                       child: Container(
@@ -231,6 +235,13 @@ class _LoginPageState extends State<LoginPage> {
                             color: HexColor("#0EC42B"),
                           ),
                         ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
+                      child: Text(
+                        _errorMessage,
+                        style: TextStyle(color: Colors.red),
                       ),
                     ),
                   ],

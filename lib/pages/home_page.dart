@@ -1,10 +1,12 @@
+import 'package:flutter/services.dart';
 import 'package:shopping_hub/components/custom_navigation_bar.dart';
-import 'package:shopping_hub/model/categoary_model.dart';
+import 'package:shopping_hub/model/category_model.dart';
 import 'package:shopping_hub/pages/drawer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+import '../api/api_connection.dart';
 import '../auth.dart';
 import '../components/categorytiles.dart';
 import '../model/item_model.dart';
@@ -22,7 +24,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   //final AuthProvider _authProvider = AuthProvider();
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late Future<List<Category>> futureCategories;
+  bool isDrawerOpen = false;
 
   int _selectedIndex = 0;
   final List<Color> _bgColors = [
@@ -40,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       if (xOffset == 0 && yOffset == 0) {
         xOffset = 280;
-        yOffset = 270;
+        yOffset = 150;
         scaleFactor = 0.6;
       } else {
         xOffset = 0;
@@ -51,129 +55,148 @@ class _HomePageState extends State<HomePage> {
   }
 
   void toggleDrawer() {
-    setState(() {
+   /* setState(() {
       xOffset = 0;
       yOffset = 0;
       scaleFactor = 1;
-    });
+    });*/
+    if (_scaffoldKey.currentState!.isDrawerOpen) {
+      _scaffoldKey.currentState!.openEndDrawer();
+    } else {
+      _scaffoldKey.currentState!.openDrawer();
+    }
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    futureCategories = ApiConnection.getCategories();
+  }
+
+  /*Future<List<Category>> fetchCategories() async {
+    return await ApiConnection.getCategories();
+  }*/
+
+  @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle( SystemUiOverlayStyle(
+      statusBarColor: HexColor("#15CE1F"), // Set any color you want
+      statusBarBrightness: Brightness.dark, //or set color as white
+    ));
+
     Color TextColor = Theme.of(context).brightness == Brightness.dark ? Colors.white : HexColor("#575353");
     Color navbar = Theme.of(context).brightness == Brightness.dark ? HexColor("#3B3B3B") : Colors.white;
     return Scaffold(
-      body: Stack(
-        children: [
-          DrawerPage(onCloseDrawer: toggleDrawer),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(xOffset == 0 && yOffset == 0 ? 0 : 20),
-              // theme bg color
-              color: Theme.of(context).colorScheme.background,
-
-              // color: Colors.whit,
-            ),
-            transform: Matrix4.translationValues(xOffset, yOffset, 0)..scale(scaleFactor),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 35.0),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.menu,
-                      color: TextColor,
-                    ),
-                    iconSize: 35.0,
-                    onPressed: toggleMenu,
-                  ),
-                ),
-                /*Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 37.0),
-                    child: FutureBuilder<String?>(
-                      future: _authProvider.getUsername(),
-                      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return CircularProgressIndicator(); // Show a loading indicator while retrieving the username
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          final username = snapshot.data ?? ''; // Retrieve the username from the snapshot
-                          return Text(
-                            'Hi, $username!',
-                            style: TextStyle(
-                              fontSize: 32.0,
-                              color: TextColor,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),*/
-
-                const SizedBox(
-                  height: 4.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 37.0),
-                  child: Text(
-                    "Get fresh and good items delivered to your doorstep",
-                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color:TextColor,),
-                  ),
-                ),
-                const SizedBox(
-                  height: 54.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 37.0),
-                  child: Text(
-                    "Categories",
-                    style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color:TextColor,),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                Expanded(
-                  child: Consumer<CategoaryModel>(
-                    builder: (context, value, child) {
-                      return GridView.builder(
-                        itemCount: value.catogaries.length,
-                        padding: const EdgeInsets.all(12.0),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 4 / 5,
-                        ),
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ItemPage(title: value.catogaries[index][1]),
+      body:  FutureBuilder<List<Category>>(
+          future: futureCategories,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              Future.microtask(() =>
+                  Provider.of<CategoryModel>(context, listen: false).setCategories(snapshot.data!)
+              );
+              return Stack(
+                children: [
+                  DrawerPage(onCloseDrawer: toggleMenu),
+                  AnimatedContainer(
+                    transform: Matrix4.translationValues(xOffset, yOffset, 0)..scale(scaleFactor),
+                    alignment: Alignment.centerLeft,
+                    duration: const Duration(milliseconds: 250),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Theme.of(context).colorScheme.background,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 35.0),
+                          Container(
+                            color: HexColor("#15CE1F"),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.menu,
+                                        color: Colors.white,
+                                      ),
+                                      iconSize: 35.0,
+                                      onPressed: toggleMenu,
+                                    ),
+                                  ),
                                 ),
-                              );
-                            },
-                            child: categoryTiles(
-                              image: value.catogaries[index][0],
-                              title: value.catogaries[index][1],
-                              color: value.catogaries[index][2],
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 5),
+                                  child: Text(
+                                    "Shopping Hub",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color: Colors.white),
+                                  ),
+                                ),
 
+                              ],
                             ),
-                          );
-                        },
-                      );
-                    },
+                          ),
+                          SizedBox(height: 15,),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 37.0),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "Select Category",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: Colors.black),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          Expanded(
+                            child: Consumer<CategoryModel>(
+                              builder: (context, value, child) {
+                                return ListView.builder(
+                                  itemCount: value.categories.length,
+                                  padding: const EdgeInsets.all(12.0),
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ItemPage(title: value.categories[index].name),
+                                          ),
+                                        );
+                                      },
+                                      child: categoryTiles(
+                                        title: value.categories[index].name,
+                                        color: const Color(0xFF95FF9A).withOpacity(0.2),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+                ],
+              );
+            }
+          },
+        ),
+
       bottomNavigationBar: Visibility(
         visible: xOffset == 0 && yOffset == 0,
         child: Container(
@@ -217,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                 GButton(
                   icon: Icons.chat_bubble_outline_rounded,
                   text: 'Chat',
-                  iconColor: HexColor("#119DA4"),
+                  iconColor: HexColor("#13B662"),
                   onPressed: () {
                     setState(() {
                       _selectedIndex = 2;
@@ -231,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                 GButton(
                   icon: Icons.favorite_outline,
                   text: 'Favorites',
-                  iconColor: HexColor("#19647E"),
+                  iconColor: HexColor("#13B662"),
                   onPressed: () {
                     setState(() {
                       _selectedIndex = 3;

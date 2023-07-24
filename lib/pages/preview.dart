@@ -71,7 +71,7 @@ class _PreviewState extends State<Preview> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 55.0, right: 55.0, top: 74.0),
+                padding: const EdgeInsets.only(left: 55.0, right: 55.0, top: 34.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -237,14 +237,14 @@ class _PreviewState extends State<Preview> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '${x.name}-100g',
+                                          '${x.name}',
                                           style: TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         Text(
-                                          'Rs ${x.price} per 100g',
+                                          '\$${x.price} per 1 item',
                                           style: TextStyle(
                                             fontSize: 14.0,
                                             color: HexColor("#848484"),
@@ -261,7 +261,7 @@ class _PreviewState extends State<Preview> {
                                               ),
                                             ),
                                             Text(
-                                              'Rs ${x.totalPrice}.00',
+                                              '\$ ${x.totalPrice}0',
                                               style: TextStyle(
                                                 fontSize: 14.0,
 
@@ -316,7 +316,7 @@ class _PreviewState extends State<Preview> {
                              Row(
                                children: [
                                  const Text(
-                                   'Rs ',
+                                   '\$ ',
                                    style: TextStyle(
                                      fontSize: 16.0,
 
@@ -336,7 +336,7 @@ class _PreviewState extends State<Preview> {
                          ),
                        ),
                        const SizedBox(height: 5.0),
-                       const Padding(
+                      const Padding(
                          padding: EdgeInsets.only(left: 35.0, right: 35.0),
                          child: Row(
                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -352,7 +352,7 @@ class _PreviewState extends State<Preview> {
                              Row(
                                children: [
                                  Text(
-                                     'Rs ',
+                                     '\$ ',
                                      style: TextStyle(
                                        fontSize: 16.0,
 
@@ -536,4 +536,6 @@ class _PreviewState extends State<Preview> {
       ),
     );
   }
+
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 }

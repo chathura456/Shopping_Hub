@@ -46,7 +46,8 @@ class _cartTilesState extends State<cartTiles> {
   }
   @override
   Widget build(BuildContext context) {
-
+    double priceDouble = double.parse(widget.price);
+    double priceTotal = double.parse(widget.total);
     return Padding(
       padding: const EdgeInsets.only(top: 30.0),
       child: Stack(
@@ -65,10 +66,13 @@ class _cartTilesState extends State<cartTiles> {
               children: [
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Image.asset(
-                    widget.image,
-                    width: 120.0,
-                    height: 99.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4,right: 8),
+                    child: Image.network(
+                      widget.image,
+                      width: 100.0,
+                      height: 99.0,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -77,7 +81,7 @@ class _cartTilesState extends State<cartTiles> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '${widget.title} - 100g',
+                        '${widget.title}',
                         style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
@@ -85,14 +89,14 @@ class _cartTilesState extends State<cartTiles> {
                       ),
                       SizedBox(height: 4.0),
                       Text(
-                        'RS ${widget.price} - per 100g',
+                        '\$${priceDouble.toStringAsFixed(2)}per 1 item',
                         style: TextStyle(
                           fontSize: 12.0,
                           color: HexColor("#848484"),
                         ),
                       ),
                       Text(
-                        'Rs ${widget.total} -',
+                        '\$${priceTotal.toStringAsFixed(2)} ',
                         style: TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
@@ -103,9 +107,9 @@ class _cartTilesState extends State<cartTiles> {
                 ),
                 SizedBox(width: 10.0),
                 Padding(
-                  padding: const EdgeInsets.only(right: 30.0, top: 25.0),
+                  padding: const EdgeInsets.only(right: 15.0),
                   child: Container(
-                    height: 70.0,
+                    height: 80.0,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
                       border: Border.all(
@@ -125,13 +129,15 @@ class _cartTilesState extends State<cartTiles> {
                             size: 20.0,
                           ),
                         ),
+                        SizedBox(height: 5,),
                         Text(
                           '$counter',
                           style: TextStyle(
-                            fontSize: 14.0,
+                            fontSize: 12.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        SizedBox(height: 5,),
                         InkWell(
                           onTap: () {
                             // Add your logic for the minus button here
