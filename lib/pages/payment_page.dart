@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:shopping_hub/pages/preview.dart';
 import 'package:shopping_hub/pages/thankyou.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +9,9 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../auth.dart';
 import '../components/custom_navigation_bar1.dart';
+import '../model/cart_model.dart';
 import 'cart_page.dart';
 import 'chat_page.dart';
 import 'favorite_page.dart';
@@ -20,14 +26,31 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
+  AuthProvider authProvider = AuthProvider();
+  String? email1;
+  String? name;
   int _selectedIndex=0;
   void _onItemTapped(int index){
     setState(() {
       _selectedIndex=index;
     });
   }
+
+  void getData()async {
+    name = await authProvider.getUsername();
+    email1 = await authProvider.getEmail();
+    print(name! + email1!);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartModel>(context,listen: false);
      Color topic = Theme.of(context).brightness == Brightness.dark ? HexColor("#0EC42B") : HexColor("#4D4B4B");
          Color navbar = Theme.of(context).brightness == Brightness.dark ? HexColor("#333333") : Colors.white;
                       Color subtext= Theme.of(context).brightness == Brightness.dark ? HexColor("#FFFFFF") : HexColor("#848484");
@@ -53,7 +76,7 @@ class _PaymentState extends State<Payment> {
                       color: topic,
                     ),
                   ),
-                  SizedBox(width: 10.0),
+                  const SizedBox(width: 10.0),
                   Padding(
                     padding: const EdgeInsets.only(left: 70.0),
                     child: Text(
@@ -69,7 +92,7 @@ class _PaymentState extends State<Payment> {
                 ],
               ),
             ),
-            SizedBox(height: 67.0),
+            const SizedBox(height: 67.0),
             Padding(
                     padding: const EdgeInsets.only(left:30.0,right: 40.0),
                     child: Text(
@@ -81,7 +104,7 @@ class _PaymentState extends State<Payment> {
                       ),
                     ),
             ),
-            SizedBox(height:50.0),
+            const SizedBox(height:50.0),
             Padding(
               padding: const EdgeInsets.only(left:50.0),
               child: Center(
@@ -112,7 +135,7 @@ class _PaymentState extends State<Payment> {
                 ),
               ),
             ),
-            SizedBox(height:39.0),
+            const SizedBox(height:39.0),
             Container(
               width: 275.0,
               height: 50.0,
@@ -132,7 +155,7 @@ class _PaymentState extends State<Payment> {
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Container(
               width: 275.0,
               height: 50.0,
@@ -200,15 +223,22 @@ class _PaymentState extends State<Payment> {
             
               ),
             ),
-            SizedBox(height:100.0),
             const SizedBox(height: 20.0),
             GestureDetector(
-            onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(
-                builder: (context){
-                  return const  thankyouPage();
-                },
-              ),
-            ),
+            onTap: () async {
+              cartProvider.clearCart();
+              var orderID = generateOrderId();
+              await authProvider.sendOrderConfirmationMail(email1!, name!, orderID).whenComplete(() {
+                Fluttertoast.showToast(msg: 'Order Confirmed. Order Confirmation Mail Sent');
+                Navigator.pushReplacement(context, MaterialPageRoute(
+                  builder: (context){
+                    return thankyouPage(orderID: orderID,);
+                  },
+                )
+                );
+              });
+
+            },
             child: Padding(
               padding: const EdgeInsets.only(bottom:25.0),
               child: Container(
@@ -230,7 +260,7 @@ class _PaymentState extends State<Payment> {
                           color: HexColor("#FFFFFF"),
                         ),
                       ),
-                    SizedBox(width:120.0), // Add a space of 5.0 between the text and the icon
+                    const SizedBox(width:120.0), // Add a space of 5.0 between the text and the icon
                     Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: HexColor("#FFFFFF"),
@@ -322,8 +352,13 @@ class _PaymentState extends State<Payment> {
           ),
         ),
       ),
-
-      
     );
+  }
+
+  String generateOrderId() {
+    var random = Random();
+    // Generate a random number with 6 digits
+    var orderId = random.nextInt(900000) + 100000;
+    return orderId.toString();
   }
 }

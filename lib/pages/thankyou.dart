@@ -4,7 +4,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'home_page.dart';
 
 class thankyouPage extends StatefulWidget {
-  const thankyouPage({ Key? key }) : super(key: key);
+  const thankyouPage({ Key? key, this.orderID }) : super(key: key);
+  final String? orderID;
 
   @override
   State<thankyouPage> createState() => _thankyouPageState();
@@ -54,18 +55,26 @@ class _thankyouPageState extends State<thankyouPage> {
                 ],
               ),
             ),
-            SizedBox(height: 59.0),
-            Padding(
-                  padding: const EdgeInsets.only(left:50.0,right: 50.0),
+            const SizedBox(height: 30.0),
+            const Padding(
+                  padding: EdgeInsets.only(left:50.0,right: 50.0),
                   child: Text(
                     'Your Order has been placed!',
                   style: TextStyle(
                   fontSize:15.0,
-                  
                 ),
               ),
             ),
-            SizedBox(height:20.0),
+            const SizedBox(height:20.0),
+        Padding(
+              padding: const EdgeInsets.only(left:50.0,right: 50.0),
+              child: Text(
+                'Order ID : ${widget.orderID}',
+                style: const TextStyle(
+                  fontSize:15.0,
+                ),
+              ),
+            ),
             Padding(
             padding: const EdgeInsets.only(left:10.0,right:20.0,top:80.0,bottom:100.0),
             child: Image.asset('lib/images/thanks.png',width: 350.0, height: 300.0,),

@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shopping_hub/auth.dart';
 import 'package:shopping_hub/pages/signup_page.dart';
 import 'package:shopping_hub/pages/home_page.dart';
@@ -25,8 +26,6 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _submitForm() async {
     // print('submitting form');
-
-
     setState(() {
       _errorMessage = '';
     });
@@ -36,12 +35,10 @@ class _LoginPageState extends State<LoginPage> {
       _password,
     );
     if (result == false) {
-      setState(() {
-        _errorMessage = 'You have to Sign Up first';
-      });
     }
 
     if (result == true) {
+      Fluttertoast.showToast(msg: 'Login Success');
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
@@ -161,23 +158,23 @@ class _LoginPageState extends State<LoginPage> {
 
                         if (_formKey.currentState!.validate()) {
                           /**********If backend run correctly you can uncomment this**********/
-                        //_formKey.currentState!.save();
-                          //_submitForm();
+                        _formKey.currentState!.save();
+                          _submitForm();
 
-                          // Navigator.pushReplacement(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const HomePage(),
-                          //   ),
-                          // );
-
-                          /**********If backend run correctly you can comment this**********/
-                          Navigator.pushReplacement(
+                        /*  Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const HomePage(),
                             ),
-                          );
+                          );*/
+
+                          /**********If backend run correctly you can comment this**********/
+                          /*Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomePage(),
+                            ),
+                          );*/
                         }
                       },
                       child: Container(

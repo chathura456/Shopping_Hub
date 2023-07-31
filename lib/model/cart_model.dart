@@ -61,6 +61,10 @@ class CartModel extends ChangeNotifier {
     return totalPrice;
   }
 
+  void clearCart() {
+    cartList.clear();
+    notifyListeners();
+  }
 
    
 }

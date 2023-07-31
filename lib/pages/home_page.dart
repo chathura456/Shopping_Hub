@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shopping_hub/components/custom_navigation_bar.dart';
 import 'package:shopping_hub/model/category_model.dart';
 import 'package:shopping_hub/pages/drawer_page.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping_hub/pages/login_page.dart';
 import '../api/api_connection.dart';
 import '../auth.dart';
 import '../components/categorytiles.dart';
@@ -23,7 +25,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  //final AuthProvider _authProvider = AuthProvider();
+  final AuthProvider _authProvider = AuthProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late Future<List<Category>> futureCategories;
   bool isDrawerOpen = false;
@@ -142,11 +144,26 @@ class _HomePageState extends State<HomePage> {
                                     style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color: Colors.white),
                                   ),
                                 ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 65),
+                                  child: IconButton(
+                                    onPressed: (){
+                                      _authProvider.logout().whenComplete(() {
+                                        Fluttertoast.showToast(msg: 'Logout Success');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (
+                                                context) => const LoginPage()));
+                                      });
+                                    },
+                                    icon: const Icon(Icons.logout, color: Colors. white,),
+                                  ),
 
+                                )
                               ],
                             ),
                           ),
-                          SizedBox(height: 15,),
+                          const SizedBox(height: 15,),
                           const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 37.0),
                             child: Align(
@@ -247,7 +264,7 @@ class _HomePageState extends State<HomePage> {
                     });
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => chatPage()),
+                      MaterialPageRoute(builder: (context) => const chatPage()),
                     );
                   },
                 ),
@@ -261,7 +278,7 @@ class _HomePageState extends State<HomePage> {
                     });
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => favPage()),
+                      MaterialPageRoute(builder: (context) => const favPage()),
                     );
                   },
                 ),

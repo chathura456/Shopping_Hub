@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shopping_hub/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -36,21 +37,20 @@ class _SignupPageState extends State<SignupPage> {
     _password,
     _ConfirmPassword,
     _phone,
-    _address,
-    _dob,
-    
   );
 
   if (result == false) {
     setState(() {
       _errorMessage = 'You are already registered';
+      Fluttertoast.showToast(msg: 'You are already registered');
     });
   }
 
   if (result == true) {
+    Fluttertoast.showToast(msg: 'Registration Success. check your email to verify the account');
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => LoginPage()),
     );
   }
 }
@@ -102,7 +102,7 @@ class _SignupPageState extends State<SignupPage> {
                         onSaved: (value) => _name = value!,
                       ),
                     ),
-                    SizedBox(height: 20.0,),
+                    const SizedBox(height: 20.0,),
                     Container(
                       width: 280.0,
                       height: 45.0,
@@ -222,61 +222,6 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     ),
                     SizedBox(height: 20.0,),
-                    Container(
-                      width: 280.0,
-                      height: 45.0,
-                      decoration: BoxDecoration(
-                        color:navbar ,
-                        borderRadius: BorderRadius.circular(5.0),
-                        border: Border.all(color:HexColor("#848484")),
-                      ),
-                      child:TextFormField(
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left:10.0,top:-6.0),
-                          hintText:'Address',
-                          hintStyle: TextStyle(
-                            fontSize: 15.0,
-                            color:SubTextColor,
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter an address';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) => _address = value!,
-                        
-                      ),
-                    ),SizedBox(height: 20.0),
-                        Container(
-                      width: 280.0,
-                      height: 45.0,
-                      decoration: BoxDecoration(
-                        color:navbar ,
-                        borderRadius: BorderRadius.circular(5.0),
-                        border: Border.all(color:HexColor("#848484")),
-                      ),
-                      child:TextFormField(
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left:10.0,top:-6.0),
-                          hintText:'Date of Birth',
-                          hintStyle: TextStyle(
-                            fontSize: 15.0,
-                            color:SubTextColor,
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter you birthday ';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) => _dob = value!,
-                        
-                      ),
-                    ),
-                    const SizedBox(height: 20.0,),
                     GestureDetector(
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
